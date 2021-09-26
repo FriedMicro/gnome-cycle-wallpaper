@@ -1,0 +1,24 @@
+#!/bin/bash
+
+$IMAGES_PATH = "/mnt/chroot/gdrive/home/neo/drive/IFTTT/reddit"
+# Minus one here so greater than fires
+$SCREEN_HEIGHT = 1439
+$SCREEN_WIDTH = 2559
+
+files_array=()
+
+for entry in $IMAGES_PATH/*
+do
+  height=$(gm identify -format '%w' "${entry}")
+  width=$(gm identify -format '%w' "${entry}")
+  if [ "$height" -gt "$SCREEN_HEIGHT" ]; then
+    if [ "$width" -gt "$SCREEN_WIDTH" ]; then
+      file_string=$( printf "%s\n" "$entry" | sed 's/ /%20/g' )
+      files_array+=("${file_string}")
+    fi
+  fi
+done
+
+rand_image="file://${files_array[$RANDOM % ${#files_array[@]} ]}"
+gsettings set org.gnome.desktop.background picture-uri $rand_image
+gsettings set org.gnome.desktop.screensaver picture-uri $rand_image
