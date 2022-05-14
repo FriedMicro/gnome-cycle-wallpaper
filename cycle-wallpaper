@@ -21,4 +21,6 @@ done
 
 rand_image="file://${files_array[$RANDOM % ${#files_array[@]} ]}"
 gsettings set org.gnome.desktop.background picture-uri $rand_image
+gsettings set org.gnome.desktop.background picture-uri-dark $rand_image
 gsettings set org.gnome.desktop.screensaver picture-uri $rand_image
+gsettings set org.gnome.desktop.screensaver picture-uri-dark $rand_image
