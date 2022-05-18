@@ -1,25 +1,18 @@
 #!/bin/bash
 
-$IMAGES_PATH = "/mnt/chroot/gdrive/home/neo/drive/IFTTT/reddit"
-# Minus one here so greater than fires
-$SCREEN_HEIGHT = 1439
-$SCREEN_WIDTH = 2559
+IMAGE_PATH = "/home/friedmicro/Pictures/wallpaper.jpg"
+SCREEN_HEIGHT = 1440
+SCREEN_WIDTH = 2560
+DEVICE_ID = "desktop"
+SERVER_IP = 192.168.1.44
+SERVER_PORT = 3500
 
-files_array=()
+curl -X POST http://$SERVER_IP:$SERVER_PORT/image -H "Content-Type: application/json" -d '{"min_x": $SCREEN_WIDTH, "min_y": $SCREEN_HEIGHT, "device": $DEVICE_ID}' > $IMAGE_PATH
 
-for entry in $IMAGES_PATH/*
-do
-  height=$(gm identify -format '%w' "${entry}")
-  width=$(gm identify -format '%w' "${entry}")
-  if [ "$height" -gt "$SCREEN_HEIGHT" ]; then
-    if [ "$width" -gt "$SCREEN_WIDTH" ]; then
-      file_string=$( printf "%s\n" "$entry" | sed 's/ /%20/g' )
-      files_array+=("${file_string}")
-    fi
-  fi
-done
-
-rand_image="file://${files_array[$RANDOM % ${#files_array[@]} ]}"
+rand_image=$IMAGE_PATH
+rand_image=$( printf "%s\n" "$rand_image" | sed 's/ /%20/g' )
+rand_image="file://"$rand_image
+echo $rand_image
 gsettings set org.gnome.desktop.background picture-uri $rand_image
 gsettings set org.gnome.desktop.background picture-uri-dark $rand_image
 gsettings set org.gnome.desktop.screensaver picture-uri $rand_image
